@@ -1,9 +1,25 @@
-# hello-world
-Hello World repository for Git tutorial
-This is an example repository for the Git tutoial on https://www.w3schools.com
+#mysql db schema for customer with multiple addresses with foreign key constraint
 
-This repository is built step by step in the tutorial.
-A new line has been added
-Added this line in github editor
-Added a line to directly pull
-Adding line to push into github
+CREATE TABLE customer (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    phone VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE address (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL,
+    address_line_1 VARCHAR(255) NOT NULL,
+    address_line_2 VARCHAR(255),
+    city VARCHAR(100) NOT NULL,
+    state VARCHAR(100) NOT NULL,
+    country VARCHAR(100) NOT NULL,
+    postal_code VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customer(id)
+);
