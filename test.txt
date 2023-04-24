@@ -153,3 +153,5 @@ CREATE TABLE invoice_line (
     FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id),
     FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
+
+
