@@ -22,9 +22,6 @@ CREATE TABLE address (
     FOREIGN KEY (customer_id) REFERENCES customer(id)
 );
 
-#mysql db schema for customer orders with oderLines and related tables with foreign key constraint
-
-
 CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT,
@@ -34,6 +31,12 @@ CREATE TABLE orders (
     FOREIGN KEY (customer_id) REFERENCES customer(id)
 );
 
+CREATE TABLE product (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    description TEXT,
+    price DECIMAL(10, 2)
+);
 
 CREATE TABLE order_line (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -44,17 +47,6 @@ CREATE TABLE order_line (
     FOREIGN KEY (order_id) REFERENCES orders(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
-
-
-CREATE TABLE product (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100),
-    description TEXT,
-    price DECIMAL(10, 2)
-);
-
-#mysql db schema for company inventory table and  WHERE_house table and related tables with foreign key constraint
-
 
 CREATE TABLE company (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -70,7 +62,6 @@ CREATE TABLE company (
     contact_number VARCHAR(20)
 );
 
-
 CREATE TABLE store_or_warehouse (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255),
@@ -85,7 +76,6 @@ CREATE TABLE store_or_warehouse (
     contact_number VARCHAR(20)
 );
 
-
 CREATE TABLE inventory (
     id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT,
@@ -98,10 +88,6 @@ CREATE TABLE inventory (
     --FOREIGN KEY (company_id) REFERENCES company(id),
     FOREIGN KEY (store_or_warehouse_id) REFERENCES store_or_warehouse(id)
 );
-
-#mysql db schema for Restore table and  Restore_line table and related tables with foreign key constraint
-
-
 
 CREATE TABLE restock_order (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -120,25 +106,18 @@ CREATE TABLE restock_lines (
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
-#mysql db schema for Shipment table and  Delivery table with foreign key constraint
-
 CREATE TABLE shipment (
   id INT AUTO_INCREMENT PRIMARY KEY,
   order_id INT,
   shipment_number VARCHAR(255),
   shipper_name VARCHAR(255),
   consignee_name VARCHAR(255),
-  origin VARCHAR(255),
-  destination VARCHAR(255),
   shipment_date DATE,
   expected_delivery_date DATE,
   actual_delivery_date DATE,
   shipment_status ENUM('Created', 'Cancelled','Approved','Shipped') DEFAULT 'Created',
   FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
-
-
-#mysql db schema for Invoice and Invoice_line table with foreign key constraint
 
 CREATE TABLE invoice (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -148,7 +127,6 @@ CREATE TABLE invoice (
   total_amount DECIMAL(10,2),
   CONSTRAINT fk_order_id FOREIGN KEY (order_id) REFERENCES orders(id)
 );
-
 
 CREATE TABLE invoice_lines (
   id INT AUTO_INCREMENT PRIMARY KEY,
