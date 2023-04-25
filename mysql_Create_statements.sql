@@ -1,4 +1,6 @@
-CREATE TABLE customer (
+CREATE SCHEMA expcomoany ;
+
+CREATE TABLE expcompany.distributor (
     id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
@@ -8,9 +10,9 @@ CREATE TABLE customer (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE address (
+CREATE TABLE expcompany.address (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    customer_id INT NOT NULL,
+    distributor_id INT NOT NULL,
     address_line_1 VARCHAR(255) NOT NULL,
     address_line_2 VARCHAR(255),
     city VARCHAR(100) NOT NULL,
@@ -19,26 +21,26 @@ CREATE TABLE address (
     postal_code VARCHAR(20) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (customer_id) REFERENCES customer(id)
+    FOREIGN KEY (distributor_id) REFERENCES distributor(id)
 );
 
-CREATE TABLE orders (
+CREATE TABLE expcompany.orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    customer_id INT,
+    distributor_id INT,
     order_date DATE,
     total_amount DECIMAL(10, 2),
-    order_status ENUM('Created', 'Cancelled','Approved','Shipped') DEFAULT 'Created'
-    FOREIGN KEY (customer_id) REFERENCES customer(id)
+    order_status ENUM('Created', 'Cancelled','Approved','Shipped') DEFAULT 'Created',
+    FOREIGN KEY (distributor_id) REFERENCES distributor(id)
 );
 
-CREATE TABLE product (
+CREATE TABLE expcompany.product (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100),
     description TEXT,
     price DECIMAL(10, 2)
 );
 
-CREATE TABLE order_line (
+CREATE TABLE expcompany.order_line (
     id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT,
     product_id INT,
@@ -48,7 +50,7 @@ CREATE TABLE order_line (
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
-CREATE TABLE company (
+CREATE TABLE expcompany.company (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100),
     address_line_1 VARCHAR(255) NOT NULL,
@@ -62,7 +64,7 @@ CREATE TABLE company (
     contact_number VARCHAR(20)
 );
 
-CREATE TABLE store_or_warehouse (
+CREATE TABLE expcompany.store_or_warehouse (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255),
     address_line_1 VARCHAR(255) NOT NULL,
@@ -76,20 +78,20 @@ CREATE TABLE store_or_warehouse (
     contact_number VARCHAR(20)
 );
 
-CREATE TABLE inventory (
+CREATE TABLE expcompany.inventory (
     id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT,
-    --company_id INT,
+    -- company_id INT,
     store_or_warehouse_id INT,
     quantity INT,
-    --price DECIMAL(10, 2),
+    -- price DECIMAL(10, 2),
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES product(id),
-    --FOREIGN KEY (company_id) REFERENCES company(id),
+    -- FOREIGN KEY (company_id) REFERENCES company(id),
     FOREIGN KEY (store_or_warehouse_id) REFERENCES store_or_warehouse(id)
 );
 
-CREATE TABLE restock_order (
+CREATE TABLE expcompany.restock_order (
     id INT PRIMARY KEY AUTO_INCREMENT,
     store_or_warehouse_id INT,
     order_date DATE,
@@ -97,16 +99,16 @@ CREATE TABLE restock_order (
 );
 
 
-CREATE TABLE restock_lines (
+CREATE TABLE expcompany.restock_lines (
     id INT PRIMARY KEY AUTO_INCREMENT,
     restock_order_id INT,
     product_id INT,
     quantity INT,
     FOREIGN KEY (restock_order_id) REFERENCES restock_order(id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
+    FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
-CREATE TABLE shipment (
+CREATE TABLE expcompany.shipment (
   id INT AUTO_INCREMENT PRIMARY KEY,
   order_id INT,
   shipment_number VARCHAR(255),
@@ -116,10 +118,10 @@ CREATE TABLE shipment (
   expected_delivery_date DATE,
   actual_delivery_date DATE,
   shipment_status ENUM('Created', 'Cancelled','Approved','Shipped') DEFAULT 'Created',
-  FOREIGN KEY (order_id) REFERENCES orders(order_id)
+  FOREIGN KEY (order_id) REFERENCES orders(id)
 );
 
-CREATE TABLE invoice (
+CREATE TABLE expcompany.invoice (
   id INT AUTO_INCREMENT PRIMARY KEY,
   invoice_number VARCHAR(255),
   order_id INT,
@@ -128,7 +130,7 @@ CREATE TABLE invoice (
   CONSTRAINT fk_order_id FOREIGN KEY (order_id) REFERENCES orders(id)
 );
 
-CREATE TABLE invoice_lines (
+CREATE TABLE expcompany.invoice_lines (
   id INT AUTO_INCREMENT PRIMARY KEY,
   invoice_id INT,
   product_name VARCHAR(255),
@@ -136,6 +138,3 @@ CREATE TABLE invoice_lines (
   price DECIMAL(10,2),
   CONSTRAINT fk_invoice_id FOREIGN KEY (invoice_id) REFERENCES invoice(id)
 );
- 
-
-
